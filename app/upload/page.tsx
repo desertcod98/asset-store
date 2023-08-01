@@ -3,21 +3,42 @@
 import { FieldValues, useForm } from "react-hook-form";
 import Button from "../components/Button";
 import { toast } from "react-hot-toast";
+import { type } from "os";
+
+interface FormSubmitData{
+  name: string;
+  description: string;
+  files: FileList;
+  thumbnail: FileList;
+  images: FileList;
+}
 
 export default function Upload() {
-  const { register, handleSubmit, reset } = useForm<FieldValues>({
+  const { register, handleSubmit, reset } = useForm<FormSubmitData>({
     defaultValues: {
       name: "",
       description: "",
-      files: null,
-      thumbnail: null,
+      files: undefined,
+      thumbnail: undefined,
+      images: undefined
     },
   });
 
-  function onSubmit(data: FieldValues) {
+  function onSubmit(data: FormSubmitData) {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    for (const file of data.files){
+      formData.append("files", file);
+    }
+    formData.append("thumbnail", data.thumbnail[0]);
+    for (const image of data.images){
+      formData.append("images", image);
+    }
+    console.log(formData);
     fetch("/api/asset", {
       method: "POST",
-      body: objectToFormData(data),
+      body: formData,
     }).then((res) => {
       if (res.status !== 200) {
         res.text().then((error) => toast.error(error));
@@ -46,7 +67,20 @@ export default function Upload() {
         placeholder="Asset description..."
         required
       />
-      <input type="file" {...register("files")} id="files" multiple required />
+      <input
+        type="file"
+        {...register("files")}
+        id="files"
+        multiple
+        required
+      />
+      <input
+        type="file"
+        {...register("images")}
+        id="images"
+        multiple
+        required
+      />
       {/* <label
         className="cursor-pointer border-2 p-2 rounded border-black w-fit"
         id="file-input-label"
@@ -72,15 +106,4 @@ export default function Upload() {
       <Button type="submit">asd</Button>
     </form>
   );
-}
-
-function objectToFormData(obj: any) {
-  const formData = new FormData();
-
-  Object.entries(obj).forEach(([key, value]) => {
-    if (typeof value === "string") formData.append(key, value);
-    else if (typeof value === "object") formData.append(key, value as Blob);
-  });
-
-  return formData;
 }
