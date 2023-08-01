@@ -19,20 +19,24 @@ export default async function AssetCategory({
   if (!category) {
     redirect("/");
   }
-
-  const categoryAssets = await db
-    .select()
-    .from(assets)
-    .where(eq(assets.assetCategoryId, category.id));
-
+  const categoryAssets = await db.query.assets.findMany({
+    with: {
+      author: {
+        columns: {
+          name: true,
+        }
+      }
+    }
+  })
+  
   return (
     <div>
       <Header />
-      <div className="w-full h-full bg-sky-100 flex-col items-center flex gap-10 mt-5">
+      <div className="w-full h-full  flex-col items-center flex gap-10 mt-5">
         <div className="flex items-center">
           <span className="font-medium">{categoryAssets.length + " results"}</span>
         </div>
-        <div>
+        <div className="w-3/4 flex gap-10 flex-wrap">
           {categoryAssets.map((asset) => {
             return <Asset key={asset.id} {...asset} />;
           })}

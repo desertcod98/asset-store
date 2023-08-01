@@ -59,7 +59,7 @@ export const users = pgTable(
   'users',
   {
     id: varchar('id', { length: 255 }).primaryKey().notNull(),
-    name: varchar('name', { length: 255 }),
+    name: varchar('name', { length: 255 }).notNull(),
     email: varchar('email', { length: 255 }).notNull(),
     emailVerified: timestamp('emailVerified'),
     image: varchar('image', { length: 255 }),
