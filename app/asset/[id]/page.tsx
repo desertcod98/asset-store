@@ -33,17 +33,3 @@ export default async function AssetDetail({ params }: { params: { id: string } }
   );
 }
 
-//TODO save paths in database (like '1/image.png') so you can delete them ecc.
-async function getAssetImages(assetId: number) {
-  const imagesData = (
-    await supabase.storage.from("assetImages").list(assetId.toString() + "/")
-  ).data;
-  if (!imagesData) return null;
-  console.log(imagesData);
-  const images = imagesData.map((image) => {
-    return supabase.storage
-      .from("assetImages")
-      .getPublicUrl(assetId.toString() + "/" + image.name).data.publicUrl;
-  });
-  return images;
-}
