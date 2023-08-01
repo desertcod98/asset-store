@@ -143,6 +143,7 @@ export const assets = pgTable(
     name: text('name').notNull(),
     assetCategoryId: integer('asset_category_id').notNull(),
     authorId: text('author_id').notNull(),
+    thumbnailUrl: text('thumbnail_url'),
   }
 )
 
@@ -155,6 +156,22 @@ export const assetCategories = pgTable(
   }
 )
 
+export const assetImages = pgTable(
+  'asset_images',
+  {
+    id: serial('id').primaryKey(),
+    assetId: integer('asset_id').notNull(),
+    imagePath: text('image_path').notNull().unique(),
+  }
+)
+
+export const assetImagesRelations = relations(assetImages, ({one}) => ({
+  asset: one(assets, {
+    fields: [assetImages.assetId],
+    references: [assets.id]
+  })
+}))
+
 export const assetsRelations = relations(assets, ({one, many}) => ({
   assetCategory: one(assetCategories, {
     fields: [assets.assetCategoryId],
@@ -165,6 +182,7 @@ export const assetsRelations = relations(assets, ({one, many}) => ({
     references: [users.id],
   }),
   userBoughtAssets: many(userBoughtAssets),
+  assetImages: many(assetImages),
 }))
 
 export const assetCategoriesRelations = relations(assetCategories, ({many}) => ({
