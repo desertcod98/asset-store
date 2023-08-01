@@ -1,12 +1,36 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import db from "@/db";
+import { assetImages, assets, users } from "@/db/schema";
 import supabase from "@/lib/supabase";
+import { placeholder } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { createId } from "@paralleldrive/cuid2";
+
+const pCreateAsset = db
+  .insert(assets)
+  .values({
+    assetCategoryId: placeholder("categoryId"),
+    authorId: placeholder("authorId"),
+    description: placeholder("description"),
+    name: placeholder("name"),
+    priceCents: placeholder("priceCents"),
+    thumbnailPath: placeholder("thumbnailPath"),
+  })
+  .returning({ id: assets.id })
+  .prepare("create_asset");
+
+const pInsertAssetImage = db
+  .insert(assetImages)
+  .values({
+    assetId: placeholder("assetId"),
+    imagePath: placeholder("imagePath"),
+  })
+  .prepare("insert_asset_image");
 
 export async function POST(request: Request) {
   const user = await getCurrentUser();
 
-  if(!user){
+  if (!user) {
     return new NextResponse("Not logged in", { status: 403 });
   }
 
@@ -17,16 +41,53 @@ export async function POST(request: Request) {
     const files = formData.getAll("files");
     const thumbnail = formData.get("thumbnail");
     const images = formData.getAll("images");
-
+    const category = 2; //TODO REMOVE HARDCODED
+    const price = 1000;
     if (!files || !thumbnail || !name || !description || !images) {
       return new NextResponse("Missing info", { status: 400 });
     }
 
-    if(typeof files[0] !== "string") {
-      await supabase.storage.from('assets').upload(files[0].name, files[0]);
+    //Upload thumbnail to Supabase
+    if (typeof thumbnail === "string") {
+      return new NextResponse("Bad request", { status: 400 });
+    }
+    const thumbnailCuid = createId();
+    const thumbnailPath = thumbnail.name + "-" + thumbnailCuid;
+    await supabase.storage.from("assetImages").upload(thumbnailPath, thumbnail);
+
+    // Create db entry
+    const [asset] = await pCreateAsset.execute({
+      categoryId: category,
+      authorId: user.id,
+      description,
+      name,
+      priceCents: price,
+      thumbnailPath,
+    });
+
+    // Upload asset files
+    for (const file of files) {
+      if (typeof file !== "string") {
+        await supabase.storage
+          .from("assets")
+          .upload(asset.id.toString() + "/" + file.name, file);
+      }
     }
 
-    return NextResponse.json("");
+    // Upload asset images and add them to database
+    for (const image of images) {
+      if (typeof image !== "string") {
+        const imagePath = asset.id.toString() + "/" + image.name;
+
+        await supabase.storage.from("assetImages").upload(imagePath, image);
+        await pInsertAssetImage.execute({
+          imagePath,
+          assetId: asset.id,
+        });
+      }
+    }
+
+    return new NextResponse("Success", { status: 200 });
   } catch (error: any) {
     console.log(error, "ASSET_UPLOAD_ERROR");
     return new NextResponse("Internal Error", { status: 500 });

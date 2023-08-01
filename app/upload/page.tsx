@@ -47,6 +47,7 @@ export default function Upload() {
   }
 
   //TODO make this not horrible
+  //TODO make user able to select category
 
   return (
     <form
@@ -78,6 +79,7 @@ export default function Upload() {
         type="file"
         {...register("images")}
         id="images"
+        accept="image/*"
         multiple
         required
       />

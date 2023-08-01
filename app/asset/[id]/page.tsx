@@ -22,6 +22,7 @@ export default async function AssetDetail({ params }: { params: { id: string } }
     return supabase.storage.from("assetImages").getPublicUrl(assetImage.asset_images.imagePath).data.publicUrl;
   })
 
+
   return (
     <div className="w-full h-full">
       <Header/>
