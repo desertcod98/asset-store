@@ -64,6 +64,7 @@ export const users = pgTable(
     emailVerified: timestamp('emailVerified'),
     image: varchar('image', { length: 255 }),
     created_at: timestamp('created_at').notNull().defaultNow(),
+    hashedPassword: text('hashed_password'),
   },
   user => ({
     emailIndex: uniqueIndex('users__email__idx').on(user.email),

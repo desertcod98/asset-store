@@ -1,40 +1,45 @@
-// import bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
+import { createId } from '@paralleldrive/cuid2';
+import db from "@/db";
+import { NextResponse } from "next/server";
+import { users } from "@/db/schema";
+import { eq, sql } from "drizzle-orm";
 
-// import prisma from "@/lib/prisma";
-// import { NextResponse } from "next/server";
+interface RequestData{
+  email: string;
+  name: string;
+  password: string;
+}
 
-// export async function POST(request: Request) {
-//   try {
-//     const body = await request.json();
-//     const { email, name, password } = body;
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { email, name, password } : RequestData = body;
 
-//     if (!email || !password || !name) {
-//       return new NextResponse("Missing info", { status: 400 });
-//     }
+    if (!email || !password || !name) {
+      return new NextResponse("Missing info", { status: 400 });
+    }
 
-//     const existingUsers = await prisma.user.count({
-//       where: {
-//         email: email,
-//       }
-//     })
+    const [{count}] = await db.select({ count: sql<number>`count(*)` }).from(users).where(eq(users.email, email));
 
-//     if(existingUsers > 0){
-//       return new NextResponse("Email address already in use", { status: 409 });
-//     }
+    if(count > 0){
+      return new NextResponse("Email address already in use", { status: 409 });
+    }
 
-//     const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
-//     const user = await prisma.user.create({
-//       data: {
-//         email,
-//         name,
-//         hashedPassword,
-//       },
-//     });
+    await db.insert(users).values({
+      email,
+      name,
+      hashedPassword,
+      id: createId(),
+    })
 
-//     return NextResponse.json(user);
-//   } catch (error: any) {
-//     console.log(error, "REGISTRATION_ERROR");
-//     return new NextResponse("Internal Error", { status: 500 }); 
-//   }
-// }
+    const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
+
+    return NextResponse.json(user);
+  } catch (error: any) {
+    console.log(error, "REGISTRATION_ERROR");
+    return new NextResponse("Internal Error", { status: 500 }); 
+  }
+}
