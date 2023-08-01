@@ -3,6 +3,7 @@ import { assetCategories, assets } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { redirect } from "next/navigation"
 import Asset from "./components/Asset";
+import Header from "@/app/components/Header";
 
 export default async function AssetCategory({ params }: { params: { name: string } }){
   const [category] = await db.select().from(assetCategories).where(eq(assetCategories.name, params.name.toUpperCase())).limit(1);
@@ -12,8 +13,9 @@ export default async function AssetCategory({ params }: { params: { name: string
   const categoryAssets = await db.select().from(assets).where(eq(assets.assetCategoryId, category.id))
   return (
     <div>
+      <Header/>
       {categoryAssets.map(asset => {
-        return <Asset key={asset.id}/>
+        return <Asset key={asset.id} {...asset}/>
       })}
     </div>
   )

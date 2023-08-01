@@ -28,14 +28,12 @@ export async function POST(request: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    await db.insert(users).values({
+    const [user] = await db.insert(users).values({
       email,
       name,
       hashedPassword,
       id: createId(),
-    })
-
-    const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
+    }).returning()
 
     return NextResponse.json(user);
   } catch (error: any) {

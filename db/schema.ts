@@ -140,9 +140,9 @@ export const assets = pgTable(
     created_at: timestamp('created_at').notNull().defaultNow(),
     description: text('description').notNull(),
     priceCents: integer('price_cents').notNull(),
-    name: text('name'),
+    name: text('name').notNull(),
     assetCategoryId: integer('asset_category_id').notNull(),
-    authorId: integer('author_id').notNull(),
+    authorId: text('author_id').notNull(),
   }
 )
 
