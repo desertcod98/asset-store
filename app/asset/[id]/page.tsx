@@ -23,7 +23,7 @@ export default async function AssetDetail({ params }: { params: { id: string } }
   })
 
   return (
-    <div>
+    <div className="w-full h-full">
       <Header/>
       <span>{asset[0].assets.name}</span>
       {allAssetImages.map(assetImage => {
