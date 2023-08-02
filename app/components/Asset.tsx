@@ -1,9 +1,9 @@
-import { assets, users } from "@/db/schema";
+import { assets } from "@/db/schema";
 import supabase from "@/lib/supabase";
 import { InferModel } from "drizzle-orm";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "./Button";
+import AddToCart from "./AddToCart";
 
 type Asset = InferModel<typeof assets> & { author: { name: string } };
 
@@ -33,17 +33,9 @@ export default async function Asset(asset: Asset) {
           <span className="font-medium text-lg">{asset.name}</span>
         </Link>
         <span>TODO stars</span>
-        <div className="flex flex-row w-full justify-between items-center">
+        <div className="flex flex-row w-full justify-between items-center relative">
           <span>{asset.priceCents / 100} $</span>
-          <Button>
-            <span className="text-lg">+</span>
-            <Image
-              src={"/assets/cart.svg"}
-              alt="Add to cart image"
-              width={20}
-              height={20}
-            />
-          </Button>
+          <AddToCart assetId={asset.id}/>
         </div>
       </div>
     </div>
