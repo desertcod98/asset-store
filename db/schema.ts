@@ -73,7 +73,7 @@ export const users = pgTable(
 
 export const usersRelationships = relations(users, ({many}) => ({
   assets: many(assets),
-  userBoughtAssets: many(userBoughtAssets),
+  carts: many(carts),
 }))
 
 export const verificationTokens = pgTable(
@@ -109,29 +109,6 @@ export const reviews = pgTable(
     userBoughtAssetsId: integer('user_bought_assets_id').notNull().unique(),
   }
 )
-
-export const userBoughtAssets = pgTable(
-  'user_bought_assets',
-  {
-    userId: integer('user_id').notNull(),
-    assetId: integer('asset_id').notNull(),
-    created_at: timestamp('created_at').notNull().defaultNow(),
-    price: integer('price').notNull(),
-  }, (t) => ({
-		pk: primaryKey(t.userId, t.assetId),
-	})
-)
-
-export const userBoughtAssetsRelations = relations(userBoughtAssets, ({one}) => ({
-  user: one(users, {
-    fields: [userBoughtAssets.userId],
-    references: [users.id]
-  }),
-  asset: one(assets, {
-    fields: [userBoughtAssets.assetId],
-    references: [assets.id],
-  })
-}))
 
 export const assets = pgTable(
   'assets',
@@ -184,7 +161,7 @@ export const assetsRelations = relations(assets, ({one, many}) => ({
     fields: [assets.authorId],
     references: [users.id],
   }),
-  userBoughtAssets: many(userBoughtAssets),
+  assetsInCarts: many(assetsInCarts),
   assetImages: many(assetImages),
 }))
 
@@ -218,3 +195,43 @@ export const reportRelations = relations(reports, ({one}) => ({
   })
 }))
 
+export const carts = pgTable(
+  'carts',
+  {
+    id: serial('id').primaryKey(),
+    created_at: timestamp('created_at').notNull().defaultNow(),
+    bought_at: timestamp('bought_at'),
+    userId: text('userId').notNull(),
+  },
+  (t) => ({
+    unq: unique().on(t.userId, t.bought_at)
+  })
+)
+
+export const cartRelations = relations(carts, ({many}) => ({
+  assetsInCarts: many(assetsInCarts),
+}))
+
+export const assetsInCarts = pgTable(
+  'assets_in_carts',
+  {
+    created_at: timestamp('created_at').notNull().defaultNow(),
+    assetId: integer('asset_id').notNull(),
+    cartId: integer('cart_id').notNull(),
+    price: integer('price').notNull(),
+  },
+  (t) => ({
+    pk: primaryKey(t.assetId, t.cartId)
+  })
+)
+
+export const assetsInCartsRelations = relations(assetsInCarts, ({one}) => ({
+  cart: one(carts, {
+    fields: [assetsInCarts.cartId],
+    references: [carts.id]
+  }),
+  asset: one(assets, {
+    fields: [assetsInCarts.assetId],
+    references: [assets.id],
+  })
+}))
