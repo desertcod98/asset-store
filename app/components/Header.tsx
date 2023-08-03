@@ -1,8 +1,8 @@
 import Image from "next/image";
-import LogoutButton from "./LogoutButton";
+import AccountActionButton from "./AccountActionButton";
 import Link from "next/link";
 
-export default function Header() {
+export default async function Header() {
   return (
     <div className="w-full h-28 border-b-2 flex justify-center">
       <div className="w-3/4 h-full  flex items-center gap-10">
@@ -36,7 +36,7 @@ export default function Header() {
               height={25}
             />
           </Link>
-          <LogoutButton />
+          <AccountActionButton />
         </div>
       </div>
     </div>
