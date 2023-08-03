@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import { assetCategories } from "@/db/schema";
 import AssetCategory from "./components/AssetCategory";
 
+
 export default async function Home() {
   const allAssetCategories = await db.select().from(assetCategories);
   return (

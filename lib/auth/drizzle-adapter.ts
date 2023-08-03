@@ -4,15 +4,17 @@ import { accounts, sessions, users, verificationTokens } from '@/db/schema';
 import type { Adapter } from 'next-auth/adapters';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
-export function DrizzleAdapter(db: PostgresJsDatabase): Adapter {
+import * as schema from '../../db/schema';
+
+export function DrizzleAdapter(db: PostgresJsDatabase<typeof schema>): Adapter {
   return {
     async createUser(userData) {
       await db.insert(users).values({
         id: createId(),
-        email: userData.email,
-        emailVerified: userData.emailVerified,
-        name: userData.name,
-        image: userData.image,
+        email: userData.email!,
+        emailVerified: userData.emailVerified!,
+        name: userData.name!,
+        image: userData.image!,
       });
       const rows = await db
         .select()
@@ -58,7 +60,12 @@ export function DrizzleAdapter(db: PostgresJsDatabase): Adapter {
     },
     async updateUser({ id, ...userData }) {
       if (!id) throw new Error('User not found');
-      await db.update(users).set(userData).where(eq(users.id, id));
+    await db.update(users).set({
+      email: userData.email,
+      name: userData.name!,
+      emailVerified: userData.emailVerified,
+      image: userData.image
+    }).where(eq(users.id, id));
       const rows = await db
         .select()
         .from(users)

@@ -84,13 +84,14 @@ export const authOptions: NextAuthOptions = {
         }
         return token;
       }
-
       return {
         id: dbUser.id,
         name: dbUser.name,
         email: dbUser.email,
         picture: dbUser.image,
+        role: dbUser.role,
       };
     },
+    
   },
 };
