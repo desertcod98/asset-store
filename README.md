@@ -1,1 +1,1 @@
-Boilerplate code for nextjs projects
+Example asset store website
