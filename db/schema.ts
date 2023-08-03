@@ -4,6 +4,7 @@ import {
   index,
   integer,
   pgTable,
+  pgEnum,
   primaryKey,
   serial,
   text,
@@ -55,6 +56,8 @@ export const sessions = pgTable(
   })
 );
 
+export const userRoles = pgEnum('role', ['USER', 'ADMIN']);
+
 export const users = pgTable(
   'users',
   {
@@ -65,6 +68,7 @@ export const users = pgTable(
     image: varchar('image', { length: 255 }),
     created_at: timestamp('created_at').notNull().defaultNow(),
     hashedPassword: text('hashed_password'),
+    role: userRoles('role').default('USER').notNull(),
   },
   user => ({
     emailIndex: uniqueIndex('users__email__idx').on(user.email),
