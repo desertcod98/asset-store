@@ -1,10 +1,11 @@
 "use client";
 
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Button from "../components/Button";
 import { toast } from "react-hot-toast";
-import { type } from "os";
 import Header from "../components/Header";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface FormSubmitData {
   name: string;
@@ -15,7 +16,14 @@ interface FormSubmitData {
 }
 
 export default function Upload() {
-  const { register, handleSubmit, reset } = useForm<FormSubmitData>({
+  const session = useSession();
+  const router = useRouter();
+
+  if(session.status !== "authenticated"){
+    router.push("/login");
+  }
+
+  const { register, handleSubmit } = useForm<FormSubmitData>({
     defaultValues: {
       name: "",
       description: "",

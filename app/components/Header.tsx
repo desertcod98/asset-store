@@ -1,8 +1,8 @@
-import Image from "next/image"
-import LogoutButton from "./LogoutButton"
-import Link from "next/link"
+import Image from "next/image";
+import LogoutButton from "./LogoutButton";
+import Link from "next/link";
 
-export default function Header(){
+export default function Header() {
   return (
     <div className="w-full h-28 border-b-2 flex justify-center">
       <div className="w-3/4 h-full  flex items-center gap-10">
@@ -15,18 +15,30 @@ export default function Header(){
           />
           <h1 className="text-2xl">Asset store</h1>
         </Link>
-        <input type="text" placeholder = "Search assets..." className="w-2/3 h-10 rounded border-2 px-2" />
-        <div className="flex gap-1">
+        <input
+          type="text"
+          placeholder="Search assets..."
+          className="w-2/3 h-10 rounded border-2 px-2"
+        />
+        <div className="flex gap-2">
           <Image
-              className="filter-[green]"
-              src={"/assets/cart.svg"}
-              alt={"Cart icon"}
+            className="filter-[green]"
+            src={"/assets/cart.svg"}
+            alt={"Cart icon"}
+            width={25}
+            height={25}
+          />
+          <Link href={"/upload"}>
+            <Image
+              src={"/assets/upload.svg"}
+              alt="Upload asset"
               width={25}
               height={25}
             />
-            <LogoutButton/>
+          </Link>
+          <LogoutButton />
         </div>
       </div>
     </div>
-  )
+  );
 }
