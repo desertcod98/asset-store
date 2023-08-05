@@ -63,7 +63,7 @@ export const users = pgTable(
   {
     id: varchar('id', { length: 255 }).primaryKey().notNull(),
     name: varchar('name', { length: 255 }).notNull(),
-    email: varchar('email', { length: 255 }).notNull(),
+    email: varchar('email', { length: 255 }),
     emailVerified: timestamp('emailVerified'),
     image: varchar('image', { length: 255 }),
     created_at: timestamp('created_at').notNull().defaultNow(),
@@ -78,6 +78,7 @@ export const users = pgTable(
 export const usersRelationships = relations(users, ({many}) => ({
   assets: many(assets),
   carts: many(carts),
+  moderations: many(assetsModerations),
 }))
 
 export const verificationTokens = pgTable(
@@ -125,11 +126,25 @@ export const assets = pgTable(
     assetCategoryId: integer('asset_category_id').notNull(),
     authorId: text('author_id').notNull(),
     thumbnailPath: text('thumbnail_path'),
+    moderationId: integer('moderation_id')
   },
   (t) => ({
     unq: unique().on(t.name, t.authorId)
   })
 )
+
+export const assetsModerations = pgTable(
+  "assets_moderations", 
+  {
+    id: serial('id').primaryKey(),
+    created_at: timestamp('created_at').notNull().defaultNow(),
+    description: text('description').notNull(),
+    moderatorId: text("moderator_id").notNull().references(() => users.id),
+    updatedAt: timestamp('updated_at')
+  }
+)
+
+export const moderationState = pgEnum('moderation_state', ['ACCEPTED', 'REJECTED', 'PENDING'])
 
 export const assetCategories = pgTable(
   'asset_categories',
