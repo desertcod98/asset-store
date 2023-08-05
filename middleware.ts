@@ -5,10 +5,14 @@ export default withAuth({
     signIn: "/",
   },
   callbacks: {
-    authorized: ({token}) => token?.role === "ADMIN", 
+    authorized: ({token, req}) => {
+      if(req.nextUrl.pathname === "/admin")
+      return token?.role === "ADMIN"
+      return token !== null
+    }, 
   }
 });
 
 export const config = {
-  matcher: ["/admin"],
+  matcher: ["/admin", "/upload"],
 };

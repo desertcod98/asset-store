@@ -26,9 +26,10 @@ export default async function AssetCategory({
           name: true,
         }
       }
-    }
+    },
+    where: eq(assets.assetCategoryId, category.id)
   })
-  
+
   return (
     <div>
       <Header />

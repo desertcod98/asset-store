@@ -8,6 +8,7 @@ import AddToCart from "./AddToCart";
 type Asset = InferModel<typeof assets> & { author: { name: string } };
 
 export default async function Asset(asset: Asset) {
+  console.log(asset)
   const thumbnailUrl = asset.thumbnailPath
     ? await supabase.storage
         .from("assetImages")
