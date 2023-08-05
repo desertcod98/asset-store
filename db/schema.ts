@@ -142,7 +142,7 @@ export const assetsModerations = pgTable(
     id: serial('id').primaryKey(),
     created_at: timestamp('created_at').notNull().defaultNow(),
     description: text('description'),
-    moderatorId: text("moderator_id").notNull().references(() => users.id),
+    moderatorId: text("moderator_id").references(() => users.id),
     updatedAt: timestamp('updated_at'),
     state: moderationState('moderation_state').notNull().default('PENDING')
   }
