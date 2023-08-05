@@ -1,6 +1,6 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import db from "@/db";
-import { assetImages, assets, users } from "@/db/schema";
+import { assetImages, assets, assetsModerations, users } from "@/db/schema";
 import supabase from "@/lib/supabase";
 import { placeholder } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -26,6 +26,12 @@ const pInsertAssetImage = db
     imagePath: placeholder("imagePath"),
   })
   .prepare("insert_asset_image");
+
+const pInsertModeration = db
+  .insert(assetsModerations)
+  .values({
+    
+  })
 
 export async function POST(request: Request) {
   const user = await getCurrentUser();

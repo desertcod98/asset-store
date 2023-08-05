@@ -133,18 +133,20 @@ export const assets = pgTable(
   })
 )
 
+
+export const moderationState = pgEnum('moderation_state', ['ACCEPTED', 'REJECTED', 'PENDING'])
+
 export const assetsModerations = pgTable(
   "assets_moderations", 
   {
     id: serial('id').primaryKey(),
     created_at: timestamp('created_at').notNull().defaultNow(),
-    description: text('description').notNull(),
+    description: text('description'),
     moderatorId: text("moderator_id").notNull().references(() => users.id),
-    updatedAt: timestamp('updated_at')
+    updatedAt: timestamp('updated_at'),
+    state: moderationState('moderation_state').notNull().default('PENDING')
   }
 )
-
-export const moderationState = pgEnum('moderation_state', ['ACCEPTED', 'REJECTED', 'PENDING'])
 
 export const assetCategories = pgTable(
   'asset_categories',
