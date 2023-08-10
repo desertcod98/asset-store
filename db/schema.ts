@@ -126,7 +126,7 @@ export const assets = pgTable(
     assetCategoryId: integer('asset_category_id').notNull(),
     authorId: text('author_id').notNull(),
     thumbnailPath: text('thumbnail_path'),
-    moderationId: integer('moderation_id')
+    moderationId: integer('moderation_id').notNull()
   },
   (t) => ({
     unq: unique().on(t.name, t.authorId)

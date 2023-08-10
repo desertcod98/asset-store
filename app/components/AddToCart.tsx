@@ -22,11 +22,13 @@ export default function AddToCart({assetId}: {assetId: number}) {
     }
     startTransition(async () => {
       try{
+        await fetch("/api/cart");
         await sAddToCart(assetId);
         setIsLoading(false);
         toast.success("Item added to cart");
       }catch(e : any){
         toast.error("Error while adding item to cart");
+        console.log(e)
         setIsLoading(false);
       }
     })

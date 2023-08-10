@@ -15,6 +15,7 @@ const pCreateAsset = db
     name: placeholder("name"),
     priceCents: placeholder("priceCents"),
     thumbnailPath: placeholder("thumbnailPath"),
+    moderationId: placeholder("moderationId"),
   })
   .returning({ id: assets.id })
   .prepare("create_asset");
@@ -29,9 +30,9 @@ const pInsertAssetImage = db
 
 const pInsertModeration = db
   .insert(assetsModerations)
-  .values({
-    
-  })
+  .values({})
+  .returning({id: assetsModerations.id})
+  .prepare('insert_asset_moderation')
 
 export async function POST(request: Request) {
   const user = await getCurrentUser();
@@ -41,6 +42,7 @@ export async function POST(request: Request) {
   }
 
   try {
+
     const formData = await request.formData();
     const name = formData.get("name");
     const description = formData.get("description");
@@ -58,8 +60,16 @@ export async function POST(request: Request) {
       return new NextResponse("Bad request", { status: 400 });
     }
     const thumbnailCuid = createId();
-    const thumbnailPath = thumbnail.name + "-" + thumbnailCuid;
+    const thumbnailPath = thumbnailCuid + "-" + thumbnail.name;
+    
+    console.log(thumbnail)
+    console.log(thumbnailPath)
+
+    //TODO important, next lines throws error, a thread on stackoverflow says its better uploading on the client
     await supabase.storage.from("assetImages").upload(thumbnailPath, thumbnail);
+
+    //Insert moderation
+    const [assetModeration] = await pInsertModeration.execute();
 
     // Create db entry
     const [asset] = await pCreateAsset.execute({
@@ -69,8 +79,9 @@ export async function POST(request: Request) {
       name,
       priceCents: price,
       thumbnailPath,
+      moderationId: assetModeration.id
     });
-
+    console.log("a")
     // Upload asset files
     for (const file of files) {
       if (typeof file !== "string") {

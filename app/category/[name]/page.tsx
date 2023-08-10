@@ -24,8 +24,8 @@ export default async function AssetCategory({
       author: {
         columns: {
           name: true,
-        }
-      }
+        },
+      },
     },
     where: eq(assets.assetCategoryId, category.id)
   })
