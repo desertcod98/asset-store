@@ -6,37 +6,25 @@ import Spinner from "./Spinner";
 import { useState, useTransition } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { sAddToCart } from "./actions";
 import { toast } from "react-hot-toast";
+import { useCart } from "@/hooks/useCart";
 
 export default function AddToCart({assetId}: {assetId: number}) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [, startTransition] = useTransition();
   const session = useSession();
   const router = useRouter()
+  const cart = useCart();
 
   function addToCart(){
-    setIsLoading(true);
+    console.log(cart.get.data)
     if(session.status !== "authenticated"){
       router.push("/login");
     }
-    startTransition(async () => {
-      try{
-        await fetch("/api/cart");
-        await sAddToCart(assetId);
-        setIsLoading(false);
-        toast.success("Item added to cart");
-      }catch(e : any){
-        toast.error("Error while adding item to cart");
-        console.log(e)
-        setIsLoading(false);
-      }
-    })
+    cart.addAsset.mutate(assetId);
   }
 
   return (
     <div className="absolute right-2 bottom-2">
-      {!isLoading ? (
+      {!cart.addAsset.isLoading ? (
         <Button onClick={addToCart}>
           <span className="text-lg">+</span>
           <Image
