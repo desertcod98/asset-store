@@ -3,13 +3,11 @@
 import Button from "./Button";
 import Image from "next/image";
 import Spinner from "./Spinner";
-import { useState, useTransition } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
 import { useCart } from "@/hooks/useCart";
 
-export default function AddToCart({assetId}: {assetId: number}) {
+export default function AddToCart({assetId, price}: {assetId: number; price: number}) {
   const session = useSession();
   const router = useRouter()
   const cart = useCart();
@@ -18,7 +16,7 @@ export default function AddToCart({assetId}: {assetId: number}) {
     if(session.status !== "authenticated"){
       router.push("/login");
     }
-    cart.addAsset.mutate(assetId);
+    cart.addAsset.mutate({assetId, price});
   }
 
   function removeFromCart(){
@@ -30,7 +28,7 @@ export default function AddToCart({assetId}: {assetId: number}) {
 
   return (
     <div className="absolute right-2 bottom-2">
-      {(!cart.addAsset.isLoading && !cart.removeAsset.isLoading && !cart.get.isLoading) ? (
+      {(!cart.get.isLoading) ? (
         !cart.get.data?.some(item => item.assetId === assetId) ?
         (<Button onClick={addToCart}>
           <span className="text-lg">+</span>

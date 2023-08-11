@@ -12,20 +12,27 @@ export const useCart = () => {
     const queryClient = useQueryClient();
     const get = useQuery({queryKey: ['cart'], queryFn: getAssetsInCart})
     const addAsset = useMutation({
-        mutationFn: (assetId: number) => { return fetch("/api/cart", {
+        mutationFn: (asset: CartItem) => { return fetch("/api/cart", {
             method: "POST",
-            body: JSON.stringify({assetId}),
+            body: JSON.stringify({assetId: asset.assetId}),
         }).then((res) => res.json())},
-        onSuccess: (data: CartItem) => {
-            const oldData = queryClient.getQueryData<CartItem[]>(['cart']);
-            if(oldData){
-                queryClient.setQueryData<CartItem[]>(['cart'], [...oldData, data])
+        onMutate: async (asset: CartItem) => {
+            await queryClient.cancelQueries({ queryKey: ['cart'] })
+            const previousCart = queryClient.getQueryData<CartItem[]>(['cart']);
+            if(previousCart){
+                queryClient.setQueryData<CartItem[]>(['cart'], [...previousCart, asset])
             }else{
-                queryClient.setQueryData<CartItem[]>(['cart'], [data])
+                queryClient.setQueryData<CartItem[]>(['cart'], [asset])
             }
+            return {previousCart: previousCart ?? []}
+        },
+        onSuccess: (data: CartItem) => {
             toast.success("Item added to cart.")
         },
-        onError: () => toast.error("Error adding item to cart.")
+        onError: (err, asset, context) => {
+            toast.error("Error adding item to cart.")
+            queryClient.setQueryData(['cart'], context?.previousCart ?? [])
+        }
     })
     const removeAsset = useMutation({
         mutationFn: (assetId: number) => {
@@ -33,13 +40,21 @@ export const useCart = () => {
                 method: "DELETE",
             }).then((res) => res.json())
         },
-        onSuccess: (data: CartItem) => {
-            const oldData = queryClient.getQueryData<CartItem[]>(['cart']);
-            if(oldData){
-                const newData = oldData.filter(item => item.assetId !== data.assetId);
-                queryClient.setQueryData<CartItem[]>(['cart'], newData);
-                toast.success("Item removed from cart.")
+        onMutate: async (assetId: number) => {
+            await queryClient.cancelQueries({ queryKey: ['cart'] })
+            const previousCart = queryClient.getQueryData<CartItem[]>(['cart']);
+            if(previousCart){
+                const newData = previousCart.filter(item => item.assetId !== assetId);
+                queryClient.setQueryData<CartItem[]>(['cart'], newData);    
             }
+            return {previousCart: previousCart ?? []}
+        },
+        onSuccess: (data: CartItem) => {
+            toast.success("Item removed from cart.");
+        },
+        onError: (err, assetId, context) => {
+            toast.error("Error removing item from cart.")
+            queryClient.setQueryData(['cart'], context?.previousCart ?? [])
         }
     })
     return {
