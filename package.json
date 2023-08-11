@@ -14,6 +14,7 @@
         "@planetscale/database": "^1.10.0",
         "@supabase/supabase-js": "^2.31.0",
         "@tailwindcss/forms": "^0.5.3",
+        "@tanstack/react-query": "^4.32.6",
         "@types/node": "20.3.1",
         "@types/react": "18.2.13",
         "@types/react-dom": "18.2.6",
