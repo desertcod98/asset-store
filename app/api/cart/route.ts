@@ -12,7 +12,7 @@ export async function GET(request: Request) {
         return new NextResponse("Not logged in", { status: 403 }); 
     }
 
-    const cart = await getCart(user.id);
+    const cart = await getCartAssets(user.id);
 
     let assets: any[] = [];
 
@@ -57,18 +57,14 @@ export async function POST(request: Request) {
       return new NextResponse("Missing info", { status: 400 });
     }
 
-    let [existingCart] = await db
-    .select()
-    .from(carts)
-    .where(and(eq(carts.userId, user.id), isNull(carts.bought_at)))
-    .limit(1);
-  if (!existingCart) {
-    const [cart] = await pCreateCart.execute({ userId: user.id });
-    existingCart = cart;
-  }
-  const [asset] = await pGetAssetPrice.execute({assetId});
+    let existingCart = await getCart(user.id)
+    if (!existingCart) {
+      const [cart] = await pCreateCart.execute({ userId: user.id });
+      existingCart = cart;
+    }
+    const [asset] = await pGetAssetPrice.execute({assetId});
 
-  const [addedAsset] = await pCreateAssetInCart.execute({assetId, cartId: existingCart.id, price: asset.price})
+    const [addedAsset] = await pCreateAssetInCart.execute({assetId, cartId: existingCart.id, price: asset.price})
 
     return NextResponse.json(addedAsset);
   } catch (error: any) {
@@ -77,7 +73,52 @@ export async function POST(request: Request) {
   }
 }
 
+export async function DELETE(request: Request){
+  try {
+    const user = await getCurrentUser();
+    if(!user){
+        return new NextResponse("Not logged in", { status: 403 }); 
+    }
+    const { searchParams } = new URL(request.url);
+    const assetIdParams = searchParams.get("assetId");
+
+    if (!assetIdParams) {
+      return new NextResponse("Missing info", { status: 400 });
+    }
+
+    const assetId: number = +assetIdParams;
+    if (Number.isNaN(assetId)) {
+      return new NextResponse("Bad request", { status: 400 });
+    }
+
+    const cart = await getCart(user.id);
+
+    if(!cart){
+      return new NextResponse("Cart is empty", { status: 400 }); 
+    }
+
+    const [deletedAsset] = await db
+      .delete(assetsInCarts)
+      .where(and(eq(assetsInCarts.assetId, assetId), eq(assetsInCarts.cartId, cart.id)))
+      .returning({assetId: assetsInCarts.assetId, price: assetsInCarts.price});
+
+    return NextResponse.json(deletedAsset);
+  } catch (error: any) {
+    console.log(error, "REGISTRATION_ERROR");
+    return new NextResponse("Internal Error", { status: 500 }); 
+  }
+}
+
 async function getCart(userId: string){
+  const [cart] = await db
+    .select()
+    .from(carts)
+    .where(and(eq(carts.userId, userId), isNull(carts.bought_at)))
+    .limit(1);
+  return cart;
+}
+
+async function getCartAssets(userId: string){
   const [cart] = await db.query.carts.findMany({
     with:{
         assetsInCarts: {

@@ -30,6 +30,7 @@ const Button: React.FC<ButtonProps> = ({
         `
           flex 
           justify-center 
+          items-center
           rounded-md 
           px-2
           py-1 

@@ -27,9 +27,25 @@ export const useCart = () => {
         },
         onError: () => toast.error("Error adding item to cart.")
     })
+    const removeAsset = useMutation({
+        mutationFn: (assetId: number) => {
+            return fetch("/api/cart?assetId="+assetId, {
+                method: "DELETE",
+            }).then((res) => res.json())
+        },
+        onSuccess: (data: CartItem) => {
+            const oldData = queryClient.getQueryData<CartItem[]>(['cart']);
+            if(oldData){
+                const newData = oldData.filter(item => item.assetId !== data.assetId);
+                queryClient.setQueryData<CartItem[]>(['cart'], newData);
+                toast.success("Item removed from cart.")
+            }
+        }
+    })
     return {
     get,
     addAsset,
+    removeAsset,
 }}
 
 
