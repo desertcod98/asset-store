@@ -1,8 +1,11 @@
 import Image from "next/image";
 import AccountActionButton from "./AccountActionButton";
 import Link from "next/link";
+import OpenCart from "./OpenCart";
 
 export default async function Header() {
+  
+
   return (
     <div className="w-full h-28 border-b-2 flex justify-center">
       <div className="w-3/4 h-full  flex items-center gap-10">
@@ -21,13 +24,7 @@ export default async function Header() {
           className="w-2/3 h-10 rounded border-2 px-2"
         />
         <div className="flex gap-2">
-          <Image
-            className="filter-[green]"
-            src={"/assets/cart.svg"}
-            alt={"Cart icon"}
-            width={25}
-            height={25}
-          />
+          <OpenCart/>
           <Link href={"/upload"}>
             <Image
               src={"/assets/upload.svg"}
