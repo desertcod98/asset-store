@@ -6,8 +6,9 @@ import Spinner from "./Spinner";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/hooks/useCart";
+import { CartItem } from "@/hooks/useCart";
 
-export default function AddToCart({assetId, price}: {assetId: number; price: number}) {
+export default function AddToCart(asset: CartItem) {
   const session = useSession();
   const router = useRouter()
   const cart = useCart();
@@ -16,20 +17,20 @@ export default function AddToCart({assetId, price}: {assetId: number; price: num
     if(session.status !== "authenticated"){
       router.push("/login");
     }
-    cart.addAsset.mutate({assetId, price});
+    cart.addAsset.mutate(asset);
   }
 
   function removeFromCart(){
     if(session.status !== "authenticated"){
       router.push("/login");
     }
-    cart.removeAsset.mutate(assetId);
+    cart.removeAsset.mutate(asset.asset.id);
   }
 
   return (
     <div className="absolute right-2 bottom-2">
       {(!cart.get.isLoading) ? (
-        !cart.get.data?.some(item => item.assetId === assetId) ?
+        !cart.get.data?.some(item => item.asset.id === asset.asset.id) ?
         (<Button onClick={addToCart}>
           <span className="text-lg">+</span>
           <Image

@@ -14,11 +14,7 @@ export async function GET(request: Request) {
 
     const cart = await getCartAssets(user.id);
 
-    let assets: any[] = [];
-
-   if(cart){
-    assets = cart.assetsInCarts; 
-   }
+    const assets = cart ? cart.assetsInCarts : [];
 
     return NextResponse.json(assets);
   } catch (error: any) {
@@ -122,10 +118,20 @@ async function getCartAssets(userId: string){
   const [cart] = await db.query.carts.findMany({
     with:{
         assetsInCarts: {
+            with: {
+              asset: {
+                with: {
+                  author: {
+                    columns: {
+                      name: true,
+                    }
+                  }
+                }
+              }
+            },
             columns: {
-                assetId: true,
-                price: true,
-            }
+              price: true,
+          },
         },
     },
     where: and(eq(carts.userId, userId), isNull(carts.bought_at))
