@@ -10,7 +10,7 @@ export default function OpenCart(){
         <>
         <Image
             onClick={() => setIsOpen(true)}
-            className="filter-[green]"
+            className="filter-[green] cursor-pointer"
             src={"/assets/cart.svg"}
             alt={"Cart icon"}
             width={25}

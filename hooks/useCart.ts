@@ -6,8 +6,6 @@ interface CartItem{
     price: number
 }
 
-
-
 export const useCart = () => {
     const queryClient = useQueryClient();
     const get = useQuery({queryKey: ['cart'], queryFn: getAssetsInCart})

@@ -1,8 +1,9 @@
-"use client";
+
 
 import { Dialog, Transition } from "@headlessui/react";
 import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import CloseCart from "./CloseCart";
+import CartItems from "./CartItems";
 
 interface CartModalProps{
     isOpen: boolean;
@@ -39,18 +40,22 @@ export default function CartModal({isOpen, setIsOpen} : CartModalProps){
             leaveTo="translate-x-full"
           >
             
-                <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 bg-white/80 p-6 text-black backdrop-blur-xl dark:border-neutral-700 dark:bg-black/80 dark:text-white md:w-[390px]">
-                <div className = "flex flex-col h-full w-full ">
+                <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 bg-white/80 p-6 text-black backdrop-blur-xl dark:border-neutral-700 dark:bg-black/80 dark:text-white md:w-[410px]">
+                <div className = "flex flex-col h-full w-full items-center">
                     <div className = "flex flex-row w-full h-30 justify-between items-center">
                         <h1 className = "text-3xl">
                             Cart
                         </h1>
                         <CloseCart closeCart={() => setIsOpen(false)}/>
                     </div>
-
+                    <div className="my-4 overflow-y-auto flex-1">
+                      <CartItems/>
+                    </div>
+                    <div className="flex flex-row w-full h-32 bg-sky-200 items-center">
+                      <span>todo: price+checkout  </span>
+                    </div>
                 </div>
     
-                {/* ... */}
               </Dialog.Panel>
                 
              
