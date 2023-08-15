@@ -78,6 +78,7 @@ export const useCart = () => {
 async function getAssetsInCart(){
     const res = await fetch("/api/cart");
     const json: CartItem[] = await res.json();
+    console.log(json)
     return json;
 }
 

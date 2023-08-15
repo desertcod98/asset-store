@@ -23,7 +23,7 @@ export default async function Header() {
           placeholder="Search assets..."
           className="w-2/3 h-10 rounded border-2 px-2"
         />
-        <div className="flex gap-2">
+        <div className="flex gap-4">
           <OpenCart/>
           <Link href={"/upload"}>
             <Image

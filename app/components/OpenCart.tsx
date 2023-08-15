@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import CartModal from "../(site)/components/cart/CartModal";
+import CartModal from "./cart/CartModal";
 import { useState } from "react";
 
 export default function OpenCart(){

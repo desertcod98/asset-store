@@ -1,9 +1,10 @@
-
+"use client";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import CloseCart from "./CloseCart";
-import CartItems from "./CartItems";
+import { useCart } from "@/hooks/useCart";
+import CartItem from "./CartItem";
 
 interface CartModalProps{
     isOpen: boolean;
@@ -11,6 +12,7 @@ interface CartModalProps{
 }
 
 export default function CartModal({isOpen, setIsOpen} : CartModalProps){
+  const cart = useCart();
 
     return (
         // Use the `Transition` component at the root level
@@ -48,8 +50,10 @@ export default function CartModal({isOpen, setIsOpen} : CartModalProps){
                         </h1>
                         <CloseCart closeCart={() => setIsOpen(false)}/>
                     </div>
-                    <div className="my-4 overflow-y-auto flex-1">
-                      <CartItems/>
+                    <div className="my-4 overflow-y-auto flex-1 flex flex-col items-center gap-4 w-full">
+                      {cart.get.data && cart.get.data.map((cartItem) => {
+                        return <CartItem cartItem={cartItem}/> 
+                      })}
                     </div>
                     <div className="flex flex-row w-full h-32 bg-sky-200 items-center">
                       <span>todo: price+checkout  </span>

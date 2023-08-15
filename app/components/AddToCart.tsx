@@ -28,7 +28,7 @@ export default function AddToCart(asset: CartItem) {
   }
 
   return (
-    <div className="absolute right-2 bottom-2">
+    <>
       {(!cart.get.isLoading) ? (
         !cart.get.data?.some(item => item.asset.id === asset.asset.id) ?
         (<Button onClick={addToCart}>
@@ -52,6 +52,6 @@ export default function AddToCart(asset: CartItem) {
       ) : (
         <Spinner />
       )}
-    </div>
+    </>
   );
 }
