@@ -12,7 +12,7 @@ export default async function Asset(asset: Asset) {
     ? await supabase.storage
         .from("assetImages")
         .getPublicUrl(asset.thumbnailPath).data.publicUrl
-    : "/assets/noImage.svg";
+    : "/assets/noImage.png";
 
   return (
     <div className="flex flex-col h-60 w-60  rounded overflow-hidden">
@@ -35,7 +35,9 @@ export default async function Asset(asset: Asset) {
         <span>TODO stars</span>
         <div className="flex flex-row w-full justify-between items-center relative">
           <span>{asset.priceCents / 100} $</span>
-          <AddToCart assetId={asset.id} price={asset.priceCents}/>
+          <div className="absolute right-2 bottom-2">
+            <AddToCart asset={asset} price={asset.priceCents}/>
+          </div>
         </div>
       </div>
     </div>

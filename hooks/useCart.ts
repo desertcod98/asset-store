@@ -1,12 +1,23 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-interface CartItem{
-    assetId: number,
+export interface CartItem{
+    asset: {
+        id: number;
+        name: string;
+        created_at: Date;
+        description: string;
+        priceCents: number;
+        assetCategoryId: number;
+        authorId: string;
+        thumbnailPath: string | null;
+        moderationId: number;
+        author: {
+            name: string;
+        };
+    };
     price: number
 }
-
-
 
 export const useCart = () => {
     const queryClient = useQueryClient();
@@ -14,7 +25,7 @@ export const useCart = () => {
     const addAsset = useMutation({
         mutationFn: (asset: CartItem) => { return fetch("/api/cart", {
             method: "POST",
-            body: JSON.stringify({assetId: asset.assetId}),
+            body: JSON.stringify({assetId: asset.asset.id}),
         }).then((res) => res.json())},
         onMutate: async (asset: CartItem) => {
             await queryClient.cancelQueries({ queryKey: ['cart'] })
@@ -44,7 +55,7 @@ export const useCart = () => {
             await queryClient.cancelQueries({ queryKey: ['cart'] })
             const previousCart = queryClient.getQueryData<CartItem[]>(['cart']);
             if(previousCart){
-                const newData = previousCart.filter(item => item.assetId !== assetId);
+                const newData = previousCart.filter(item => item.asset.id !== assetId);
                 queryClient.setQueryData<CartItem[]>(['cart'], newData);    
             }
             return {previousCart: previousCart ?? []}
@@ -67,6 +78,7 @@ export const useCart = () => {
 async function getAssetsInCart(){
     const res = await fetch("/api/cart");
     const json: CartItem[] = await res.json();
+    console.log(json)
     return json;
 }
 
