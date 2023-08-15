@@ -52,7 +52,7 @@ export default function CartModal({isOpen, setIsOpen} : CartModalProps){
                     </div>
                     <div className="my-4 overflow-y-auto flex-1 flex flex-col items-center gap-4 w-full">
                       {cart.get.data && cart.get.data.map((cartItem) => {
-                        return <CartItem cartItem={cartItem}/> 
+                        return <CartItem key={cartItem.asset.id} cartItem={cartItem}/> 
                       })}
                     </div>
                     <div className="flex flex-row w-full h-32 bg-sky-200 items-center">
