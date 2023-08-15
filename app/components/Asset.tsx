@@ -12,7 +12,7 @@ export default async function Asset(asset: Asset) {
     ? await supabase.storage
         .from("assetImages")
         .getPublicUrl(asset.thumbnailPath).data.publicUrl
-    : "/assets/noImage.svg";
+    : "/assets/noImage.png";
 
   return (
     <div className="flex flex-col h-60 w-60  rounded overflow-hidden">
