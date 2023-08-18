@@ -3,6 +3,7 @@ import { ReactQueryContext } from "./context/ReactQueryContext";
 import ToasterContext from "./context/ToasterContext";
 import "./globals.css";
 import { Roboto } from "next/font/google";
+import "@uploadthing/react/styles.css";
 
 const roboto = Roboto({weight: "400", subsets: ['latin'],});
 

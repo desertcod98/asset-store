@@ -1,5 +1,4 @@
 import { assets } from "@/db/schema";
-import supabase from "@/lib/supabase";
 import { InferModel } from "drizzle-orm";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,11 +7,6 @@ import AddToCart from "./AddToCart";
 type Asset = InferModel<typeof assets> & { author: { name: string } };
 
 export default async function Asset(asset: Asset) {
-  const thumbnailUrl = asset.thumbnailPath
-    ? await supabase.storage
-        .from("assetImages")
-        .getPublicUrl(asset.thumbnailPath).data.publicUrl
-    : "/assets/noImage.png";
 
   return (
     <div className="flex flex-col h-60 w-60  rounded overflow-hidden">
@@ -21,7 +15,7 @@ export default async function Asset(asset: Asset) {
         href={"/asset/" + asset.id}
       >
         <Image
-          src={thumbnailUrl}
+          src={asset.thumbnailUrl || "/assets/noImage.png"}
           alt={asset.name}
           fill
           className="object-cover"

@@ -10,7 +10,8 @@ export interface CartItem{
         priceCents: number;
         assetCategoryId: number;
         authorId: string;
-        thumbnailPath: string | null;
+        thumbnailKey: string | null;
+        thumbnailUrl: string | null;
         moderationId: number;
         author: {
             name: string;
@@ -78,7 +79,6 @@ export const useCart = () => {
 async function getAssetsInCart(){
     const res = await fetch("/api/cart");
     const json: CartItem[] = await res.json();
-    console.log(json)
     return json;
 }
 

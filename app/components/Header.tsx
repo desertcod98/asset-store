@@ -4,8 +4,6 @@ import Link from "next/link";
 import OpenCart from "./OpenCart";
 
 export default async function Header() {
-  
-
   return (
     <div className="w-full h-28 border-b-2 flex justify-center">
       <div className="w-3/4 h-full  flex items-center gap-10">

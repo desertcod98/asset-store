@@ -125,7 +125,8 @@ export const assets = pgTable(
     name: text('name').notNull(),
     assetCategoryId: integer('asset_category_id').notNull(),
     authorId: text('author_id').notNull(),
-    thumbnailPath: text('thumbnail_path'),
+    thumbnailUrl: text('thumbnail_url'),
+    thumbnailKey: text('thumbnail_key'),
     moderationId: integer('moderation_id').notNull()
   },
   (t) => ({
@@ -162,7 +163,8 @@ export const assetImages = pgTable(
   {
     id: serial('id').primaryKey(),
     assetId: integer('asset_id').notNull(),
-    imagePath: text('image_path').notNull().unique(),
+    imageKey: text('image_key').notNull().unique(),
+    imageUrl: text('image_url').notNull(),
   }
 )
 
