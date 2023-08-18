@@ -73,12 +73,9 @@ export async function POST(request: Request) {
     const category = 2; //TODO REMOVE HARDCODED
     const price = 1111;
 
-    console.log(parsedBody)
-
     //Insert moderation
     const [assetModeration] = await pInsertModeration.execute();
 
-    console.log(1)
     
     // Create db entry
     const [asset] = await pCreateAsset.execute({
@@ -91,7 +88,6 @@ export async function POST(request: Request) {
       thumbnailUrl: parsedBody.thumbnail[0].url,
       moderationId: assetModeration.id,
     });
-    console.log(1)
     // TODO handle files in db, for now they just get uploaded
 
     // Upload asset images and add them to database
@@ -101,9 +97,7 @@ export async function POST(request: Request) {
         imageUrl: image.url,
         assetId: asset.id,
       });
-      console.log(1)
     }
-    console.log(2)
     return new NextResponse("Success", { status: 200 });
   } catch (error: any) {
     console.log(error, "ASSET_UPLOAD_ERROR");
