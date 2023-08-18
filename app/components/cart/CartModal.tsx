@@ -55,8 +55,21 @@ export default function CartModal({isOpen, setIsOpen} : CartModalProps){
                         return <CartItem key={cartItem.asset.id} cartItem={cartItem}/> 
                       })}
                     </div>
-                    <div className="flex flex-row w-full h-32 bg-sky-200 items-center">
-                      <span>todo: price+checkout  </span>
+                    <div className="flex flex-row w-full h-32 items-center">
+                      <div className="flex flex-col gap-2 w-full">
+                        <div className="flex justify-between w-full p-2 border-b-2">
+                          <span>Taxes</span>
+                          <span>Calculated at checkout</span>
+                        </div>
+                        <div className="flex justify-between w-full p-2 border-b-2">
+                          <span>Shipping</span>
+                          <span>Calculated at checkout</span>
+                        </div>
+                        <div className="flex justify-between w-full p-2 border-b-2">
+                          <span>Price</span>
+                          <span>{cart.get.data ? cart.get.data?.reduce((i, current) => i+=current.price, 0)/100 : 0}</span>
+                        </div>
+                      </div>
                     </div>
                 </div>
     

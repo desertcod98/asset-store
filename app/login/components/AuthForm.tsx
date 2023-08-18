@@ -193,7 +193,7 @@ export default function AuthForm() {
         >
           <div>
             {variant === Variant.Login
-              ? "New to Messenger?"
+              ? "New to Asset Store?"
               : "Already have an account?"}
           </div>
           <div onClick={toggleVariant} className="underline cursor-pointer">

@@ -9,8 +9,8 @@ const roboto = Roboto({weight: "400", subsets: ['latin'],});
 
 
 export const metadata = {
-  title: "nextjs-boilerplate",
-  description: "nextjs-boilerplate",
+  title: "Asset store",
+  description: "Download assets of any type created by the community",
 };
 
 export default function RootLayout({
