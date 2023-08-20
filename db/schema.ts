@@ -127,7 +127,9 @@ export const assets = pgTable(
     authorId: text('author_id').notNull(),
     thumbnailUrl: text('thumbnail_url'),
     thumbnailKey: text('thumbnail_key'),
-    moderationId: integer('moderation_id').notNull()
+    moderationId: integer('moderation_id').notNull(),
+    assetFileKey: text('asset_file_key').notNull().unique(),
+    assetFileUrl: text('asset_file_url').notNull(),
   },
   (t) => ({
     unq: unique().on(t.name, t.authorId)

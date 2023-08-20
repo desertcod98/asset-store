@@ -16,6 +16,8 @@ export interface CartItem{
         author: {
             name: string;
         };
+        assetFileKey: string;
+        assetFileUrl: string;
     };
     price: number
 }

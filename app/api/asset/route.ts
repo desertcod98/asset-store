@@ -18,6 +18,8 @@ const pCreateAsset = db
     thumbnailKey: placeholder("thumbnailKey"),
     thumbnailUrl: placeholder("thumbnailUrl"),
     moderationId: placeholder("moderationId"),
+    assetFileKey: placeholder("assetFileKey"),
+    assetFileUrl: placeholder("assetFileUrl"),
   })
   .returning({ id: assets.id })
   .prepare("create_asset");
@@ -48,7 +50,7 @@ const Files = z.array(
 const RequestData = z.object({
   name: z.string(),
   description: z.string(),
-  files: Files,
+  file: Files,
   thumbnail: Files,
   images: Files,
 });
@@ -62,6 +64,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
+    console.log(body);
     const zodParse = RequestData.safeParse(body);
 
     if(!zodParse.success){
@@ -87,8 +90,9 @@ export async function POST(request: Request) {
       thumbnailKey: parsedBody.thumbnail[0].key,
       thumbnailUrl: parsedBody.thumbnail[0].url,
       moderationId: assetModeration.id,
+      assetFileKey: parsedBody.file[0].key,
+      assetFileUrl: parsedBody.file[0].url,
     });
-    // TODO handle files in db, for now they just get uploaded
 
     // Upload asset images and add them to database
     for (const image of parsedBody.images) {

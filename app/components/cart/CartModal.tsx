@@ -56,6 +56,7 @@ export default function CartModal({isOpen, setIsOpen} : CartModalProps){
                       })}
                     </div>
                     <div className="flex flex-row w-full h-32 items-center">
+                      {/* TODO make this a component */}
                       <div className="flex flex-col gap-2 w-full">
                         <div className="flex justify-between w-full p-2 border-b-2">
                           <span>Taxes</span>
@@ -67,7 +68,7 @@ export default function CartModal({isOpen, setIsOpen} : CartModalProps){
                         </div>
                         <div className="flex justify-between w-full p-2 border-b-2">
                           <span>Price</span>
-                          <span>{cart.get.data ? cart.get.data?.reduce((i, current) => i+=current.price, 0)/100 : 0}</span>
+                          <span>{cart.get.data ? cart.get.data?.reduce((i, current) => i+=current.price, 0)/100 : 0}$</span>
                         </div>
                       </div>
                     </div>

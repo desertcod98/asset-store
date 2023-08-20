@@ -34,7 +34,7 @@ export default async function AssetDetail({ params }: { params: { id: string } }
       {asset?.assetImages.map(assetImage => {
         return <Image src={assetImage.imageUrl} alt={asset.name + ' image'} key={assetImage.imageKey} width={50} height={50}/>
       })}
-    </div>
+    </div>  
   );
 }
 

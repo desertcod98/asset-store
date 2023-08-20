@@ -1,6 +1,5 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
 import Button from "../components/Button";
 import { useUploadThing } from "@/utils/uploadthing";
 import { useForm } from "react-hook-form";
@@ -9,7 +8,7 @@ import toast from "react-hot-toast";
 interface FormSubmitData {
   name: string;
   description: string;
-  files: FileList;
+  file: FileList;
   thumbnail: FileList;
   images: FileList;
 }
@@ -27,35 +26,30 @@ export default function UploadMain(){
   const {register, handleSubmit} = useForm<FormSubmitData>();
 
   async function onSubmit(data: FormSubmitData) {
-    const fileRes = await startUpload(Array.from(data.files))
+    const fileRes = await startUpload(Array.from(data.file))
     const thumbnailRes = await startUpload(Array.from(data.thumbnail))
     const imagesRes = await startUpload(Array.from(data.images))
-    // Promise.all(
-    //   [startUpload(Array.from(data.files)),
-    //   startUpload(Array.from(data.thumbnail)),
-    //   startUpload(Array.from(data.images)),]
-    // ).then(res => {
-      if(!fileRes || !thumbnailRes || !imagesRes){
-        return;
-      }
-  
-      const assetData = {
-        name: data.name,
-        description: data.description,
-        files: fileRes,
-        thumbnail: thumbnailRes,
-        images: imagesRes
-      }
-  
-      fetch("/api/asset", {
-        method: "POST",
-        body: JSON.stringify(assetData),
-      }).then((res) => {
-        if (res.status !== 200) {
-          res.text().then((error) => toast.error(error));
-        }
-      });
+    if(!fileRes || !thumbnailRes || !imagesRes){
+      return;
     }
+
+    const assetData = {
+      name: data.name,
+      description: data.description,
+      file: fileRes,
+      thumbnail: thumbnailRes,
+      images: imagesRes
+    }
+
+    fetch("/api/asset", {
+      method: "POST",
+      body: JSON.stringify(assetData),
+    }).then((res) => {
+      if (res.status !== 200) {
+        res.text().then((error) => toast.error(error));
+      }
+    });
+  }
   
 
   return (
@@ -81,10 +75,9 @@ export default function UploadMain(){
         />
         <input
           type="file"
-          id="files"
-          {...register('files')}
+          id="file"
+          {...register('file')}
           required
-          multiple
         />
         <input
           type="file"
