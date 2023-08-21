@@ -8,7 +8,11 @@ import AddToCart from "@/app/components/AddToCart";
 import Image from "next/image";
 import Stars from "@/app/components/Stars";
 
-export default async function AssetDetail({ params }: { params: { id: string } }) {
+export default async function AssetDetail({
+  params,
+}: {
+  params: { id: string };
+}) {
   const id: number = +params.id;
   if (Number.isNaN(id)) {
     redirect("/");
@@ -16,40 +20,42 @@ export default async function AssetDetail({ params }: { params: { id: string } }
 
   const asset = await db.query.assets.findFirst({
     with: {
-      assetImages : true,
+      assetImages: true,
       author: {
         columns: {
           name: true,
           image: true,
-        }
+        },
       },
       assetModeration: {
-       columns: {
-        state: true,
-       } 
-      }
+        columns: {
+          state: true,
+        },
+      },
     },
-    where: (eq(assets.id, id))
-  })
+    where: eq(assets.id, id),
+  });
 
-  if(!asset){
+  if (!asset) {
     redirect("/");
   }
 
-  if(asset.assetModeration.state !== "ACCEPTED"){
+  if (asset.assetModeration.state !== "ACCEPTED") {
     redirect("/");
   }
 
   return (
     <div className="w-full h-full">
-      <Header/>
+      <Header />
       <div className="flex w-full justify-center gap-3">
         <div className="flex w-2/5  h-full justify-center">
           <div className="flex flex-col h-full">
-            <CarouselComponent imagesUrls={asset.assetImages.map(image => image.imageUrl)}/>
+            <CarouselComponent
+              imagesUrls={asset.assetImages.map((image) => image.imageUrl)}
+            />
           </div>
         </div>
-        <div className="flex w-1/3 flex-col h-80 p-3">
+        <div className="flex w-1/3 flex-col h-80 p-3 gap-5">
           <h1 className="text-2xl font-semibold">{asset.name}</h1>
           <div className="flex items-center gap-2 my-2">
             <Image
@@ -59,14 +65,20 @@ export default async function AssetDetail({ params }: { params: { id: string } }
               height={30}
               className="rounded"
             />
-            <span>{asset.author.name}</span>
-            <Stars percentage={50} text/>
+            <div className="w-1/2 flex justify-between">
+              <span>{asset.author.name}</span>
+              <Stars percentage={50} text />
+            </div>
           </div>
-          <span>{asset.priceCents/100}$</span>
-          <AddToCart text asset={{asset, price: asset.priceCents}}/>
+          <span>{asset.description}</span>
+          <div className="flex w-1/2 justify-between">
+            <span className="text-green-600 text-3xl font-semibold">
+              {asset.priceCents / 100}$
+            </span>
+            <AddToCart text asset={{ asset, price: asset.priceCents }} />
+          </div>
         </div>
       </div>
-    </div>  
+    </div>
   );
 }
-
