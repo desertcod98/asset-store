@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 import db from "@/db";
-import { assetImages, assets, assetsModerations } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
-import Image from "next/image";
+import { assets } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import Header from "@/app/components/Header";
 import CarouselComponent from "@/app/components/CarouselComponent";
 import AddToCart from "@/app/components/AddToCart";
@@ -13,12 +12,6 @@ export default async function AssetDetail({ params }: { params: { id: string } }
     redirect("/");
   }
 
-  // const [asset] = await db
-  //   .select()
-  //   .from(assets)
-  //   .innerJoin(assetImages, eq(assetImages.assetId, assets.id))
-  //   .where(eq(assets.id, id))
-
   const asset = await db.query.assets.findFirst({
     with: {
       assetImages : true,
@@ -27,13 +20,12 @@ export default async function AssetDetail({ params }: { params: { id: string } }
           name: true,
           image: true,
         }
+      },
+      assetModeration: {
+       columns: {
+        state: true,
+       } 
       }
-      // assetModeration: {
-      //   where: eq(assetsModerations.state, "ACCEPTED"),
-      //   columns: {
-      //     state: true,
-      //   },
-      // }
     },
     where: (eq(assets.id, id))
   })
@@ -41,6 +33,11 @@ export default async function AssetDetail({ params }: { params: { id: string } }
   if(!asset){
     redirect("/");
   }
+
+  if(asset.assetModeration.state !== "ACCEPTED"){
+    redirect("/");
+  }
+
   return (
     <div className="w-full h-full">
       <Header/>

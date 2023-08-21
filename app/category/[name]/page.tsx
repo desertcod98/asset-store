@@ -19,16 +19,23 @@ export default async function AssetCategory({
   if (!category) {
     redirect("/");
   }
-  const categoryAssets = await db.query.assets.findMany({
+  let categoryAssets = await db.query.assets.findMany({
     with: {
       author: {
         columns: {
           name: true,
         },
       },
+      assetModeration: {
+        columns: {
+         state: true,
+        } 
+       }
     },
     where: eq(assets.assetCategoryId, category.id)
   })
+
+  categoryAssets = categoryAssets.filter(asset => asset.assetModeration.state === "ACCEPTED");
 
   return (
     <div>
