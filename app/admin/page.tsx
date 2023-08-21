@@ -1,4 +1,5 @@
 import db from "@/db"
+import AssetToModerate from "./components/AssetToModerate";
 
 export default async function Admin(){
   let unModeratedAssets = await db.query.assets.findMany({
@@ -14,7 +15,7 @@ export default async function Admin(){
     <ul>
       {unModeratedAssets.map(asset => {
         return (
-          <li key = {asset.id}>{asset.name}</li>
+          <AssetToModerate name={asset.name} id={asset.id} key={asset.id}/>
         )
       })}
     </ul>
