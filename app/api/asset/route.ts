@@ -64,7 +64,6 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    console.log(body);
     const zodParse = RequestData.safeParse(body);
 
     if(!zodParse.success){

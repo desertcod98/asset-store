@@ -8,7 +8,12 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/hooks/useCart";
 import { CartItem } from "@/hooks/useCart";
 
-export default function AddToCart(asset: CartItem) {
+interface AddToCartProps{
+  asset: CartItem;
+  text?: boolean;
+}
+
+export default function AddToCart({asset, text}: AddToCartProps) {
   const session = useSession();
   const router = useRouter();
   const cart = useCart();
@@ -30,11 +35,12 @@ export default function AddToCart(asset: CartItem) {
   }
 
   return (
-    <>
+    <div>
       {!cart.get.isLoading || session.status !== "authenticated" ? (
         !cart.get.data?.some((item) => item.asset.id === asset.asset.id) ? (
           <Button onClick={addToCart}>
             <span className="text-lg">+</span>
+            {text && <span className="mx-2">Add to cart</span>}
             <Image
               src={"/assets/cart.svg"}
               alt="Add to cart image"
@@ -45,6 +51,7 @@ export default function AddToCart(asset: CartItem) {
         ) : (
           <Button onClick={removeFromCart} danger>
             <span className="text-lg">-</span>
+            {text && <span className="mx-2">Remove from cart</span>}
             <Image
               src={"/assets/cart.svg"}
               alt="Add to cart image"
@@ -56,6 +63,6 @@ export default function AddToCart(asset: CartItem) {
       ) : (
         <Spinner />
       )}
-    </>
+    </div>
   );
 }

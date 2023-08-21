@@ -188,6 +188,7 @@ export const assetsRelations = relations(assets, ({one, many}) => ({
   }),
   assetsInCarts: many(assetsInCarts),
   assetImages: many(assetImages),
+  assetModeration: one(assetsModerations, {fields: [assets.moderationId], references: [assetsModerations.id]})
 }))
 
 export const assetCategoriesRelations = relations(assetCategories, ({many}) => ({

@@ -19,7 +19,7 @@ export default function CartItem({cartItem}: {cartItem: CartItem}){
             <span>{cartItem.asset.name}</span>
             <div className = "flex flex-col items-center gap-2">
                 <span>{cartItem.price/100} $</span>
-                <AddToCart asset={cartItem.asset} price={cartItem.price}/>
+                <AddToCart asset={{asset: cartItem.asset, price: cartItem.asset.priceCents}}/>
             </div>
         </div>
     )

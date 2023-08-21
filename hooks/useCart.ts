@@ -40,9 +40,6 @@ export const useCart = () => {
             }
             return {previousCart: previousCart ?? []}
         },
-        onSuccess: (data: CartItem) => {
-            toast.success("Item added to cart.")
-        },
         onError: (err, asset, context) => {
             toast.error("Error adding item to cart.")
             queryClient.setQueryData(['cart'], context?.previousCart ?? [])
@@ -62,9 +59,6 @@ export const useCart = () => {
                 queryClient.setQueryData<CartItem[]>(['cart'], newData);    
             }
             return {previousCart: previousCart ?? []}
-        },
-        onSuccess: (data: CartItem) => {
-            toast.success("Item removed from cart.");
         },
         onError: (err, assetId, context) => {
             toast.error("Error removing item from cart.")

@@ -30,7 +30,7 @@ export default async function Asset(asset: Asset) {
         <div className="flex flex-row w-full justify-between items-center relative">
           <span>{asset.priceCents / 100} $</span>
           <div className="absolute right-2 bottom-2">
-            <AddToCart asset={asset} price={asset.priceCents}/>
+            <AddToCart asset={{asset, price: asset.priceCents}}/>
           </div>
         </div>
       </div>
