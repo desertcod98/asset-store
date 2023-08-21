@@ -17,17 +17,17 @@ export default function CarouselComponent(props: CarouselProps) {
         infiniteLoop={true}
         dynamicHeight={false}
         showThumbs={false}
-        className="w-full h-2"
+        className="w-full"
       >
         {props.imagesUrls.map((image) => (
-          <div key={image} className="flex items-center justify-center h-full w-full">
+          <div key={image} className="flex items-center justify-center h-full w-full ">
               <Image
                 key={image}
                 alt="Asset image"
                 src={image}
-                width={1280}
-                height={720}
-                className="max-h-[300px] object-contain"
+                width={1920}
+                height={1080}
+                className="max-h-[1000px] object-contain rounded"
               /> 
             </div>
         ))}

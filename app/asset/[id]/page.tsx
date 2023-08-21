@@ -5,6 +5,8 @@ import { eq } from "drizzle-orm";
 import Header from "@/app/components/Header";
 import CarouselComponent from "@/app/components/CarouselComponent";
 import AddToCart from "@/app/components/AddToCart";
+import Image from "next/image";
+import Stars from "@/app/components/Stars";
 
 export default async function AssetDetail({ params }: { params: { id: string } }) {
   const id: number = +params.id;
@@ -42,14 +44,24 @@ export default async function AssetDetail({ params }: { params: { id: string } }
     <div className="w-full h-full">
       <Header/>
       <div className="flex w-full justify-center gap-3">
-        <div className="flex w-1/3  h-full justify-center">
+        <div className="flex w-2/5  h-full justify-center">
           <div className="flex flex-col h-full">
             <CarouselComponent imagesUrls={asset.assetImages.map(image => image.imageUrl)}/>
           </div>
         </div>
-        <div className="flex w-1/3 flex-col bg-yellow-100 h-80 p-3">
-          <h1 className="text-2xl">{asset.name}</h1>
-          <span>{asset.author.name}</span>
+        <div className="flex w-1/3 flex-col h-80 p-3">
+          <h1 className="text-2xl font-semibold">{asset.name}</h1>
+          <div className="flex items-center gap-2 my-2">
+            <Image
+              src={asset.author.image || "/assets/noProfileImage.svg"}
+              alt={asset.author + " profile image"}
+              width={30}
+              height={30}
+              className="rounded"
+            />
+            <span>{asset.author.name}</span>
+            <Stars percentage={50} text/>
+          </div>
           <span>{asset.priceCents/100}$</span>
           <AddToCart text asset={{asset, price: asset.priceCents}}/>
         </div>
