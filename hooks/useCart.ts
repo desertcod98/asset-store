@@ -1,24 +1,26 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
+export interface IAsset{
+  id: number;
+  name: string;
+  created_at: Date;
+  description: string;
+  priceCents: number;
+  assetCategoryId: number;
+  authorId: string;
+  thumbnailKey: string | null;
+  thumbnailUrl: string | null;
+  moderationId: number;
+  author: {
+      name: string;
+  };
+  assetFileKey: string;
+  assetFileUrl: string;
+};
+
 export interface CartItem{
-    asset: {
-        id: number;
-        name: string;
-        created_at: Date;
-        description: string;
-        priceCents: number;
-        assetCategoryId: number;
-        authorId: string;
-        thumbnailKey: string | null;
-        thumbnailUrl: string | null;
-        moderationId: number;
-        author: {
-            name: string;
-        };
-        assetFileKey: string;
-        assetFileUrl: string;
-    };
+    asset: IAsset,
     price: number
 }
 

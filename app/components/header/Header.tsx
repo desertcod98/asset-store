@@ -1,7 +1,8 @@
 import Image from "next/image";
-import AccountActionButton from "./AccountActionButton";
+import AccountActionButton from "../AccountActionButton";
 import Link from "next/link";
-import OpenCart from "./OpenCart";
+import OpenCart from "../OpenCart";
+import SearchBar from "./Searchbar";
 
 export default async function Header() {
   return (
@@ -16,13 +17,9 @@ export default async function Header() {
           />
           <h1 className="text-2xl">Asset store</h1>
         </Link>
-        <input
-          type="text"
-          placeholder="Search assets..."
-          className="w-2/3 h-10 rounded border-2 px-2"
-        />
+        <SearchBar/>
         <div className="flex gap-4">
-          <OpenCart/>
+          <OpenCart />
           <Link href={"/upload"}>
             <Image
               src={"/assets/upload.svg"}

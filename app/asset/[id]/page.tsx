@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import db from "@/db";
 import { assets } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import Header from "@/app/components/Header";
+import Header from "@/app/components/header/Header";
 import CarouselComponent from "@/app/components/CarouselComponent";
 import AddToCart from "@/app/components/AddToCart";
 import Image from "next/image";
