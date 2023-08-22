@@ -7,3 +7,5 @@ body,
 :root {
   height: 100%;
 }
+
+.carousel .slide { display: flex; justify-content: center; } 
