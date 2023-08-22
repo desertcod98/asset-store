@@ -6,7 +6,7 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 
 export async function GET(request: Request) {
   try {
-
+    
     const user = await getCurrentUser();
     if(!user){
         return new NextResponse("Not logged in", { status: 403 }); 

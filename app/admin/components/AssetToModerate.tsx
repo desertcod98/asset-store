@@ -12,7 +12,7 @@ export default function AssetToModerate({id, name} : {id: number, name: string})
       body: JSON.stringify({assetId: id, state: "ACCEPTED"}),
     }).then(res => {
       if(res.status !== 200){
-        res.json().then(err => toast.error(err));
+        res.text().then(err => toast.error(err));
       } else{
         toast.success("Asset accepted!");
         router.refresh();
