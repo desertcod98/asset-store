@@ -13,60 +13,65 @@ import {
   uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core';
-import type { AdapterAccount } from "next-auth/adapters";
-
-export const userRoles = pgEnum('role', ['USER', 'ADMIN']);
-
-export const users = pgTable("user", {
-  id: text("id").notNull().primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
-  image: text("image"),
-  created_at: timestamp('created_at').notNull().defaultNow(),
-  hashedPassword: text('hashed_password'),
-  role: userRoles('role').default('USER').notNull(),
-});
 
 export const accounts = pgTable(
-  "account",
+  'accounts',
   {
-    userId: text("userId")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccount["type"]>().notNull(),
-    provider: text("provider").notNull(),
-    providerAccountId: text("providerAccountId").notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: text("token_type"),
-    scope: text("scope"),
-    id_token: text("id_token"),
-    session_state: text("session_state"),
+    id: varchar('id', { length: 255 }).primaryKey().notNull(),
+    userId: varchar('userId', { length: 255 }).notNull(),
+    type: varchar('type', { length: 255 }).notNull(),
+    provider: varchar('provider', { length: 255 }).notNull(),
+    providerAccountId: varchar('providerAccountId', { length: 255 }).notNull(),
+    access_token: text('access_token'),
+    expires_in: integer('expires_in'),
+    id_token: text('id_token'),
+    refresh_token: text('refresh_token'),
+    refresh_token_expires_in: integer('refresh_token_expires_in'),
+    scope: varchar('scope', { length: 255 }),
+    token_type: varchar('token_type', { length: 255 }),
+    createdAt: timestamp('createdAt').defaultNow().notNull(),
   },
-  (account) => ({
-    compoundKey: primaryKey(account.provider, account.providerAccountId),
+  account => ({
+    providerProviderAccountIdIndex: uniqueIndex(
+      'accounts__provider__providerAccountId__idx'
+    ).on(account.provider, account.providerAccountId),
+    userIdIndex: index('accounts__userId__idx').on(account.userId),
   })
 );
 
-export const sessions = pgTable("session", {
-  sessionToken: text("sessionToken").notNull().primaryKey(),
-  userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
-});
-
-export const verificationTokens = pgTable(
-  "verificationToken",
+export const sessions = pgTable(
+  'sessions',
   {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
+    id: varchar('id', { length: 255 }).primaryKey().notNull(),
+    sessionToken: varchar('sessionToken', { length: 255 }).notNull(),
+    userId: varchar('userId', { length: 255 }).notNull(),
+    expires: timestamp('expires').notNull(),
+    created_at: timestamp('created_at').notNull().defaultNow(),
   },
-  (vt) => ({
-    compoundKey: primaryKey(vt.identifier, vt.token),
+  session => ({
+    sessionTokenIndex: uniqueIndex('sessions__sessionToken__idx').on(
+      session.sessionToken
+    ),
+    userIdIndex: index('sessions__userId__idx').on(session.userId),
+  })
+);
+
+export const userRoles = pgEnum('role', ['USER', 'ADMIN']);
+
+export const users = pgTable(
+  'users',
+  {
+    id: varchar('id', { length: 255 }).primaryKey().notNull(),
+    name: varchar('name', { length: 255 }).notNull(),
+    email: varchar('email', { length: 255 }),
+    emailVerified: timestamp('emailVerified'),
+    image: varchar('image', { length: 255 }),
+    created_at: timestamp('created_at').notNull().defaultNow(),
+    hashedPassword: text('hashed_password'),
+    role: userRoles('role').default('USER').notNull(),
+  },
+  user => ({
+    emailIndex: uniqueIndex('users__email__idx').on(user.email),
   })
 );
 
@@ -76,7 +81,20 @@ export const usersRelationships = relations(users, ({many}) => ({
   moderations: many(assetsModerations),
 }))
 
-
+export const verificationTokens = pgTable(
+  'verification_tokens',
+  {
+    identifier: varchar('identifier', { length: 255 }).primaryKey().notNull(),
+    token: varchar('token', { length: 255 }).notNull(),
+    expires: timestamp('expires').notNull(),
+    created_at: timestamp('created_at').notNull().defaultNow(),
+  },
+  verificationToken => ({
+    tokenIndex: uniqueIndex('verification_tokens__token__idx').on(
+      verificationToken.token
+    ),
+  })
+);
 
 export const reportCategories = pgTable(
   'report_categories',

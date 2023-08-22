@@ -70,7 +70,7 @@ export default async function AssetDetail({
               <Stars percentage={50} text />
             </div>
           </div>
-          <span>{asset.description}</span>
+          <span className="max-h-80 overflow-y-scroll">{asset.description}</span>
           <div className="flex w-1/2 justify-between">
             <span className="text-green-600 text-3xl font-semibold">
               {asset.priceCents / 100}$

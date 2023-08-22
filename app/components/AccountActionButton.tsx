@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function AccountActionButton() {
   const session = useSession();
-
+  
   if (session.status === "authenticated")
     return (
       <button onClick={() => signOut()}>
