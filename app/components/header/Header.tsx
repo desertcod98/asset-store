@@ -4,7 +4,7 @@ import Link from "next/link";
 import OpenCart from "../OpenCart";
 import SearchBar from "./Searchbar";
 
-export default async function Header() {
+export default async function Header({searchBarValue}: {searchBarValue? : string}) {
   return (
     <div className="w-full h-28 border-b-2 flex justify-center">
       <div className="w-3/4 h-full  flex items-center gap-10">
@@ -17,7 +17,7 @@ export default async function Header() {
           />
           <h1 className="text-2xl">Asset store</h1>
         </Link>
-        <SearchBar/>
+        <SearchBar value={searchBarValue}/>
         <div className="flex gap-4">
           <OpenCart />
           <Link href={"/upload"}>

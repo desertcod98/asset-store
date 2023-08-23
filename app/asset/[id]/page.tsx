@@ -47,7 +47,7 @@ export default async function AssetDetail({
   return (
     <div className="w-full h-full">
       <Header />
-      <div className="flex w-full justify-center gap-3">
+      <div className="flex w-full justify-center gap-3 mt-3">
         <div className="flex w-2/5  h-full justify-center">
           <div className="flex flex-col h-full">
             <CarouselComponent

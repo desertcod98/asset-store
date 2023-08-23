@@ -43,8 +43,8 @@ export default async function AssetCategory({
   return (
     <div>
       <Header />
-      <AssetCategories />
-      <AssetList assets={categoryAssets} />
+      <AssetCategories selectedId={category.id}/>
+      <AssetList assets={categoryAssets}/>
     </div>
   );
 }

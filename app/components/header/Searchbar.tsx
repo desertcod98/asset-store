@@ -7,14 +7,12 @@ interface Fields {
   query: string;
 }
 
-export default function SearchBar() {
+export default function SearchBar({value}: {value?: string}) {
   const { register, handleSubmit } = useForm<Fields>();
   const router = useRouter()
 
   function onSubmit(fields: Fields){
-    if(fields.query){
-      router.push("/search/"+fields.query)
-    }
+    router.push("/search/"+fields.query)
   }
 
   return (
@@ -22,6 +20,7 @@ export default function SearchBar() {
       <input
         type="text"
         placeholder="Search assets..."
+        value={value}
         {...register("query")}
         className="w-full h-10 rounded border-2 px-2"
       />
