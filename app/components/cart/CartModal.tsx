@@ -1,10 +1,11 @@
 "use client";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { Dispatch, Fragment, SetStateAction, useState } from "react";
+import { Dispatch, Fragment, SetStateAction } from "react";
 import CloseCart from "./CloseCart";
 import { useCart } from "@/hooks/useCart";
 import CartItem from "./CartItem";
+import CheckoutButton from "./CheckoutButton";
 
 interface CartModalProps{
     isOpen: boolean;
@@ -55,7 +56,7 @@ export default function CartModal({isOpen, setIsOpen} : CartModalProps){
                         return <CartItem key={cartItem.asset.id} cartItem={cartItem}/> 
                       })}
                     </div>
-                    <div className="flex flex-row w-full h-32 items-center">
+                    <div className="flex flex-row w-full h-32 items-center mb-5">
                       {/* TODO make this a component */}
                       <div className="flex flex-col gap-2 w-full">
                         <div className="flex justify-between w-full p-2 border-b-2">
@@ -72,8 +73,9 @@ export default function CartModal({isOpen, setIsOpen} : CartModalProps){
                         </div>
                       </div>
                     </div>
+                    <CheckoutButton/>
                 </div>
-    
+
               </Dialog.Panel>
                 
              

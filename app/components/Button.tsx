@@ -10,6 +10,7 @@ interface ButtonProps {
   secondary?: boolean;
   danger?: boolean;
   disabled?: boolean;
+  height?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -20,6 +21,7 @@ const Button: React.FC<ButtonProps> = ({
   secondary,
   danger,
   disabled,
+  height,
 }) => {
   return (
     <button
@@ -49,6 +51,7 @@ const Button: React.FC<ButtonProps> = ({
           !danger &&
           "bg-sky-500 hover:bg-sky-600 focus-visible:outline-sky-600"
       )}
+      style={height && {height}}
     >
       {children}
     </button>
