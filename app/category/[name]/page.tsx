@@ -1,5 +1,5 @@
 import db from "@/db";
-import { assetCategories, assets } from "@/db/schema";
+import { assetCategories, assets, assetsModerations } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import Header from "@/app/components/header/Header";

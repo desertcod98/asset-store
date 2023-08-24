@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { carts, assetsInCarts, assets } from "@/db/schema";
 import { eq, and, isNull, placeholder } from "drizzle-orm";
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import getCartAssets from "@/app/actions/getCartAssets";
 
 export async function GET(request: Request) {
   try {
@@ -111,31 +112,6 @@ async function getCart(userId: string){
     .from(carts)
     .where(and(eq(carts.userId, userId), isNull(carts.bought_at)))
     .limit(1);
-  return cart;
-}
-
-async function getCartAssets(userId: string){
-  const [cart] = await db.query.carts.findMany({
-    with:{
-        assetsInCarts: {
-            with: {
-              asset: {
-                with: {
-                  author: {
-                    columns: {
-                      name: true,
-                    }
-                  }
-                }
-              }
-            },
-            columns: {
-              price: true,
-          },
-        },
-    },
-    where: and(eq(carts.userId, userId), isNull(carts.bought_at))
-  })
   return cart;
 }
 
