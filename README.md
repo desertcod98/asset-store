@@ -7,4 +7,4 @@ Project used to learn the basics of:
 -Zod
 -More about React/css/Nextjs
 
-Probably discontinued
+Discontinued.
